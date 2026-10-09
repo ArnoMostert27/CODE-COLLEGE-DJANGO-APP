@@ -1,0 +1,32 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+*password*
+
+# Local database
+db.sqlite3
+db.sqlite3-journal
+
+# User uploads
+media/
+
+# Static build output
+staticfiles/
+
+# Logs
+*.log
+
+# Editor / OS junk
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

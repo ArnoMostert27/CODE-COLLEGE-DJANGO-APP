@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ deal.name }} · Cornerstone{% endblock %}
+
+{% block content %}
+<a href="{% url 'deal_list' %}" class="back">← All deals</a>
+
+<header class="deal-header">
+    <h1>{{ deal.name }}</h1>
+    <p class="deal-sub">
+        {{ deal.get_property_type_display }}
+        {% if deal.suburb %}· {{ deal.suburb }}{% endif %}
+        {% if deal.city %}, {{ deal.city }}{% endif %}
+        · Purchase R{{ deal.purchase_price|floatformat:0 }}
+        · Bond R{{ metrics.loan_amount|floatformat:0 }}
+    </p>
+</header>
+
+<section class="score-panel">
+    <div class="grade grade-{{ score.grade|lower }}">{{ score.grade }}</div>
+    <div class="score-detail">
+        <span class="score-number">{{ score.score }}/100</span>
+        <ul class="signals">
+            {% for signal in score.signals %}
+            <li class="signal signal-{{ signal.level }}">{{ signal.message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+<section class="metrics-grid">
+    <div class="metric">
+        <span class="metric-label">Monthly cash flow</span>
+        <span class="metric-value {% if metrics.monthly_cash_flow < 0 %}neg{% else %}pos{% endif %}">
+            R{{ metrics.monthly_cash_flow|floatformat:2 }}
+        </span>
+    </div>
+    <div class="metric">
+        <span class="metric-label">Annual cash flow</span>
+        <span class="metric-value {% if metrics.annual_cash_flow < 0 %}neg{% else %}pos{% endif %}">
+            R{{ metrics.annual_cash_flow|floatformat:2 }}
+        </span>
+    </div>
+    <div class="metric">
+        <span class="metric-label">Gross yield</span>
+        <span class="metric-value">{{ metrics.gross_yield|floatformat:2 }}%</span>
+    </div>
+    <div class="metric">
+        <span class="metric-label">Net yield</span>
+        <span class="metric-value">{{ metrics.net_yield|floatformat:2 }}%</span>
+    </div>
+    <div class="metric">
+        <span class="metric-label">Cap rate</span>
+        <span class="metric-value">{{ metrics.cap_rate|floatformat:2 }}%</span>
+    </div>
+    <div class="metric">
+        <span class="metric-label">Cash-on-cash return</span>
+        <span class="metric-value {% if metrics.cash_on_cash < 0 %}neg{% else %}pos{% endif %}">
+            {{ metrics.cash_on_cash|floatformat:2 }}%
+        </span>
+    </div>
+</section>
+
+<section class="breakdown">
+    <h2>Monthly breakdown</h2>
+    <table class="breakdown-table">
+        <tr><td>Effective rent (after vacancy)</td><td>R{{ metrics.effective_monthly_rent|floatformat:2 }}</td></tr>
+        <tr><td>Operating expenses</td><td>−R{{ metrics.monthly_operating_expenses|floatformat:2 }}</td></tr>
+        <tr><td>Bond repayment</td><td>−R{{ metrics.monthly_bond|floatformat:2 }}</td></tr>
+        <tr class="total"><td>Net monthly cash flow</td><td>R{{ metrics.monthly_cash_flow|floatformat:2 }}</td></tr>
+    </table>
+</section>
+
+<section class="breakdown">
+    <h2>Upfront cash required</h2>
+    <table class="breakdown-table">
+        <tr><td>Deposit</td><td>R{{ deal.deposit|floatformat:0 }}</td></tr>
+        <tr><td>Acquisition costs (transfer duty + legal)</td><td>R{{ metrics.acquisition_costs|floatformat:0 }}</td></tr>
+        <tr class="total"><td>Total cash invested</td><td>R{{ metrics.cash_invested|floatformat:0 }}</td></tr>
+    </table>
+    <p class="muted">Includes SARS transfer duty of R{{ metrics.transfer_duty|floatformat:0 }}.</p>
+</section>
+
+<p><a href="/admin/analyzer/deal/{{ deal.pk }}/change/">Edit in admin</a></p>
+{% endblock %}

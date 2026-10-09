@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Your deals · Cornerstone{% endblock %}
+
+{% block content %}
+<h1>Your deals</h1>
+
+{% if deals %}
+<ul class="deal-list">
+    {% for deal in deals %}
+    <li class="deal-row">
+        <a href="{% url 'deal_detail' deal.pk %}">{{ deal.name }}</a>
+        <span class="deal-meta">
+            {{ deal.get_property_type_display }}
+            {% if deal.suburb %}· {{ deal.suburb }}{% endif %}
+            · R{{ deal.purchase_price }}
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="muted">No deals yet. Add one in the
+    <a href="/admin/analyzer/deal/add/">admin</a> for now.</p>
+{% endif %}
+{% endblock %}
